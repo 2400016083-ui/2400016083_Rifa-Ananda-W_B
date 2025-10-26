@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>To-Do List </title>
+  <link rel="stylesheet" href="style3.css">
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500&family=Comic+Neue:wght@700&family=Patrick+Hand&display=swap" rel="stylesheet">
+</head>
+<body class="theme-pink font-quicksand">
+  <div class="controls">
+    <div class="control-group">
+      <label>🎨 Theme:</label>
+      <select id="themeSelector" onchange="changeTheme(this.value)">
+        <option value="pink">Pink Dream</option>
+        <option value="purple">Lavender Love</option>
+        <option value="blue">Sky Breeze</option>
+        <option value="mint">Mint Candy</option>
+      </select>
+    </div>
+
+    <div class="control-group">
+      <label>🖋️ Font:</label>
+      <select id="fontSelector" onchange="changeFont(this.value)">
+        <option value="quicksand">Quicksand</option>
+        <option value="comic">Comic Neue</option>
+        <option value="patrick">Patrick Hand</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="container">
+    <h2>🩷 My Magical To-Do List 🩷</h2>
+    <div class="input-group">
+      <input type="text" id="newTask" placeholder="Add a new task...">
+      <button onclick="addTask()">Add ✨</button>
+    </div>
+
+    <ul id="taskList"></ul>
+  </div>
+
+  <script>
+    function addTask() {
+      const input = document.getElementById("newTask");
+      const text = input.value.trim();
+      if (text === "") {
+        alert("Please enter a task!");
+        return;
+      }
+
+      const li = document.createElement("li");
+      li.innerHTML = `<span class="task-text">${text}</span>`;
+
+      const btnGroup = document.createElement("div");
+      btnGroup.classList.add("buttons");
+
+      const editBtn = document.createElement("button");
+      editBtn.innerHTML = "📝";
+      editBtn.classList.add("edit");
+      editBtn.onclick = function() { editTask(li); };
+
+      const delBtn = document.createElement("button");
+      delBtn.innerHTML = "❌";
+      delBtn.classList.add("delete");
+      delBtn.onclick = function() { deleteTask(li); };
+
+      btnGroup.appendChild(editBtn);
+      btnGroup.appendChild(delBtn);
+      li.appendChild(btnGroup);
+
+      li.onclick = function(e) {
+        if (e.target.classList.contains("task-text")) {
+          this.classList.toggle("completed");
+        }
+      };
+
+      document.getElementById("taskList").appendChild(li);
+      input.value = "";
+    }
+
+    function deleteTask(task) {
+      task.classList.add("fade-out");
+      setTimeout(() => task.remove(), 400);
+    }
+
+    function editTask(task) {
+      const span = task.querySelector(".task-text");
+      const currentText = span.textContent;
+
+      const input = document.createElement("input");
+      input.type = "text";
+      input.value = currentText;
+      span.replaceWith(input);
+      input.focus();
+
+      input.addEventListener("keypress", function(e) {
+        if (e.key === "Enter" && input.value.trim() !== "") {
+          const newSpan = document.createElement("span");
+          newSpan.classList.add("task-text");
+          newSpan.textContent = input.value.trim();
+          input.replaceWith(newSpan);
+        }
+      });
+    }
+
+    // Theme switcher
+    function changeTheme(theme) {
+      document.body.className = `theme-${theme} ${document.body.classList[1]}`;
+    }
+
+    // Font switcher
+    function changeFont(font) {
+      document.body.classList.remove("font-quicksand", "font-comic", "font-patrick");
+      document.body.classList.add(`font-${font}`);
+    }
+  </script>
+</body>
+</html>
+
+
+
